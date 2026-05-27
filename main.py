@@ -23,7 +23,7 @@ def pagina_inicial():
 @app.post("/perguntar")
 def perguntar_ia(dados: Mensagem):
     response = client.chat.completions.create(
-        model="llama3-8b-8192", # Modelo super inteligente e gratuito da Meta
+        model="llama-3.3-70b-versatile", # <-- MODELO ATUALIZADO AQUI
         messages=[{"role": "user", "content": dados.texto}]
     )
     return {"resposta": response.choices[0].message.content}
