@@ -3,24 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minha IA no Render</title>
+  <title>Tutor IA - EE Oito de Abril</title>
   <style>
     body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
-    input { padding: 12px; width: 300px; border-radius: 8px; border: none; font-size: 16px; margin-bottom: 10px; }
-    button { padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
-    button:hover { background: #2563eb; }
-    #resposta { margin-top: 30px; color: #94a3b8; font-size: 18px; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto; text-align: left; background: #1e293b; padding: 20px; border-radius: 8px; }
+    h1 { color: #3b82f6; margin-bottom: 5px; }
+    p { color: #94a3b8; font-size: 16px; margin-top: 0; }
+    .creditos { font-size: 14px; color: #cbd5e1; margin-top: 15px; background: #1e293b; display: inline-block; padding: 10px 20px; border-radius: 20px; border: 1px solid #3b82f6; }
+    
+    input { padding: 15px; width: 80%; max-width: 500px; border-radius: 8px; border: 2px solid #3b82f6; background: #1e293b; color: white; font-size: 16px; margin-bottom: 15px; outline: none; margin-top: 20px;}
+    input:focus { border-color: #10b981; }
+    
+    button { padding: 15px 30px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+    button:hover { background: #059669; transform: scale(1.05); }
+    
+    /* O pre-wrap garante que as quebras de linha do Python apareçam no HTML */
+    #resposta { margin-top: 30px; color: #f8fafc; font-size: 17px; line-height: 1.8; max-width: 700px; margin-left: auto; margin-right: auto; text-align: left; background: #1e293b; padding: 25px; border-radius: 8px; border-left: 5px solid #3b82f6; white-space: pre-wrap; }
   </style>
 </head>
 <body>
 
-  <h1>Minha IA no Render </h1>
-  <p>HTML, JavaScript e FastAPI rodando no mesmo servidor.</p>
+  <h1>🎓 Tutor IA - Reta Final ENEM</h1>
+  <p>Alinhado às diretrizes da SEDUC e BNCC para turbinar seu engajamento.</p>
+  
+  <div class="creditos">
+    📍 Desenvolvido para os alunos da <strong>EE Oito de Abril</strong>
+  </div>
   <br>
   
-  <input type="text" id="pergunta" placeholder="Digite sua dúvida aqui...">
+  <input type="text" id="pergunta" placeholder="Digite um tema (ex: Era Vargas, Citologia, Logaritmo)...">
   <br>
-  <button onclick="chamarIA()">Enviar para o Servidor</button>
+  <button onclick="chamarIA()">Descobrir como cai na prova 🚀</button>
   
   <div id="resposta" style="display: none;"></div>
 
@@ -29,13 +41,12 @@
       const campoTexto = document.getElementById('pergunta').value;
       const blocoResposta = document.getElementById('resposta');
       
-      if (!campoTexto) return alert("Por favor, digite algo antes de enviar!");
+      if (!campoTexto) return alert("Ei! Digite um assunto para começarmos a estudar! 😉");
       
       blocoResposta.style.display = "block";
-      blocoResposta.innerText = " Pensando...";
+      blocoResposta.innerText = "🧠 Processando as matrizes do ENEM e buscando macetes...";
 
       try {
-        // Como o HTML e o Python rodam na mesma máquina/URL, usamos a rota relativa direto!
         const response = await fetch("/perguntar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -47,7 +58,7 @@
         const dados = await response.json();
         blocoResposta.innerText = dados.resposta;
       } catch (erro) {
-        blocoResposta.innerText = " Erro ao falar com o servidor. Verifique se a chave da OpenAI está configurada no Render.";
+        blocoResposta.innerText = "❌ Ops! Tivemos um pequeno erro de conexão com a IA. Tente novamente em alguns segundos.";
         console.error(erro);
       }
     }
