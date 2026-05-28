@@ -22,17 +22,17 @@
 </head>
 <body>
 
-  <h1>🎓 Tutor IA - Reta Final ENEM</h1>
+  <h1>EE 8 de Abril- Reta Final ENEM 2026</h1>
   <p>Alinhado às diretrizes da SEDUC e BNCC para turbinar seu engajamento.</p>
   
   <div class="creditos">
-    📍 Desenvolvido para os alunos da <strong>EE Oito de Abril</strong>
+     Desenvolvido para os alunos da <strong>3° Anos 2026 EE Oito de Abril</strong>
   </div>
   <br>
   
   <input type="text" id="pergunta" placeholder="Digite um tema (ex: Era Vargas, Citologia, Logaritmo)...">
   <br>
-  <button onclick="chamarIA()">Descobrir como cai na prova 🚀</button>
+  <button onclick="chamarIA()">Descobrir como cai na prova </button>
   
   <div id="resposta" style="display: none;"></div>
 
@@ -41,10 +41,10 @@
       const campoTexto = document.getElementById('pergunta').value;
       const blocoResposta = document.getElementById('resposta');
       
-      if (!campoTexto) return alert("Ei! Digite um assunto para começarmos a estudar! 😉");
+      if (!campoTexto) return alert("Ei! Digite um assunto para começarmos a estudar! ");
       
       blocoResposta.style.display = "block";
-      blocoResposta.innerText = "🧠 Processando as matrizes do ENEM e buscando macetes...";
+      blocoResposta.innerText = " Processando as matrizes do ENEM e buscando macetes...";
 
       try {
         const response = await fetch("/perguntar", {
@@ -58,7 +58,7 @@
         const dados = await response.json();
         blocoResposta.innerText = dados.resposta;
       } catch (erro) {
-        blocoResposta.innerText = "❌ Ops! Tivemos um pequeno erro de conexão com a IA. Tente novamente em alguns segundos.";
+        blocoResposta.innerText = " Ops! Tivemos um pequeno erro de conexão com a IA. Tente novamente em alguns segundos.";
         console.error(erro);
       }
     }
