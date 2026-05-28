@@ -23,7 +23,7 @@ def pagina_inicial():
 def perguntar_ia(dados: Mensagem):
     # O "Cochicho" turbinado com o filtro automático de formatos de questões!
     instrucao_enem = (
-        "Você é um professor especialista na Programação em ENEM e SEDUC"
+        "Você é um professor especialista na Programação em Python"
     )
 
     response = client.chat.completions.create(
