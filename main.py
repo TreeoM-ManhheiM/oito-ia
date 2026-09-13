@@ -1,4 +1,6 @@
 import os
+import traceback
+
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
@@ -6,7 +8,7 @@ from openai import OpenAI
 
 app = FastAPI()
 
-# Configuração da API do Groq
+# Cliente Groq
 client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
@@ -15,15 +17,41 @@ client = OpenAI(
 class Mensagem(BaseModel):
     texto: str
 
+
+@app.get("/")
+def pagina_inicial():
+    return FileResponse("index.html")
+
+
+@app.get("/teste")
+def teste():
+    return {
+        "status": "online",
+        "groq_key_configurada": os.environ.get("GROQ_API_KEY") is not None
+    }
+
+
 @app.post("/perguntar")
 def perguntar_ia(dados: Mensagem):
     try:
+        instrucao_enem = (
+            "Você é um professor especialista em Programação Python. "
+            "Explique os conceitos de forma clara, objetiva e didática."
+        )
+
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
-                {"role": "system", "content": instrucao_enem},
-                {"role": "user", "content": dados.texto}
-            ]
+                {
+                    "role": "system",
+                    "content": instrucao_enem
+                },
+                {
+                    "role": "user",
+                    "content": dados.texto
+                }
+            ],
+            temperature=0.7
         )
 
         return {
@@ -31,13 +59,14 @@ def perguntar_ia(dados: Mensagem):
         }
 
     except Exception as e:
-        import traceback
+        erro_completo = traceback.format_exc()
 
-        erro = traceback.format_exc()
-        print(erro)
+        print("======== ERRO ========")
+        print(erro_completo)
+        print("======================")
 
         return {
             "erro": str(e),
-            "detalhes": erro
+            "tipo": type(e).__name__,
+            "detalhes": erro_completo
         }
-    return {"resposta": response.choices[0].message.content}
