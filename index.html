@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EE Oito de Abril - Reta Final ENEM 2026</title>
+<title>EE Oito de Abril</title>
 
 <style>
 body{
@@ -11,12 +12,11 @@ body{
     color:white;
     font-family:Arial,sans-serif;
     text-align:center;
-    padding:40px;
+    padding:50px;
 }
 
 h1{
     color:#3b82f6;
-    margin-bottom:10px;
 }
 
 p{
@@ -24,42 +24,38 @@ p{
 }
 
 .creditos{
-    display:inline-block;
-    margin:15px 0 25px 0;
-    padding:12px 20px;
-    border-radius:10px;
+    font-size:14px;
+    color:#cbd5e1;
+    margin-top:15px;
     background:#1e293b;
+    display:inline-block;
+    padding:10px 20px;
+    border-radius:20px;
     border:1px solid #3b82f6;
 }
 
 textarea{
-    width:85%;
-    max-width:750px;
+    width:80%;
+    max-width:700px;
     height:120px;
+    padding:15px;
+    border-radius:8px;
+    border:2px solid #3b82f6;
     background:#1e293b;
     color:white;
-    border:2px solid #3b82f6;
-    border-radius:8px;
-    padding:15px;
     font-size:16px;
-    resize:vertical;
-}
-
-textarea:focus{
-    outline:none;
-    border-color:#10b981;
+    margin-top:20px;
 }
 
 button{
     margin-top:15px;
     padding:15px 30px;
-    border:none;
-    border-radius:8px;
     background:#10b981;
     color:white;
-    font-size:16px;
-    font-weight:bold;
+    border:none;
+    border-radius:8px;
     cursor:pointer;
+    font-weight:bold;
 }
 
 button:hover{
@@ -68,66 +64,69 @@ button:hover{
 
 #resposta{
     margin-top:30px;
+    color:#f8fafc;
+    font-size:17px;
+    line-height:1.8;
     max-width:900px;
     margin-left:auto;
     margin-right:auto;
     text-align:left;
     background:#1e293b;
     padding:25px;
+    border-radius:8px;
     border-left:5px solid #3b82f6;
-    border-radius:10px;
     white-space:pre-wrap;
-    line-height:1.8;
     display:none;
 }
 </style>
+
 </head>
 
 <body>
 
-<h1>🎓 EE Oito de Abril - Reta Final ENEM 2026</h1>
+<h1>EE 8 de Abril - Reta Final ENEM 2026</h1>
 
 <p>
-Aprenda qualquer tema da prova usando explicações no estilo ENEM.
+Alinhado às diretrizes da SEDUC e BNCC para turbinar seu engajamento.
 </p>
 
 <div class="creditos">
-    Desenvolvido para os alunos dos <strong>3º Anos 2026 - EE Oito de Abril</strong>
+Desenvolvido para os alunos dos <strong>3º Anos 2026 EE Oito de Abril</strong>
 </div>
 
-<br>
+<br><br>
 
 <textarea
     id="pergunta"
-    placeholder="Exemplo: Era Vargas, Citologia, Função Exponencial, Revolução Francesa..."
+    placeholder="Digite um tema. Ex: Revolução Francesa, Citologia, Logaritmos..."
 ></textarea>
 
 <br>
 
 <button onclick="chamarIA()">
-🚀 Descobrir como cai na prova
+Descobrir como cai na prova
 </button>
 
 <div id="resposta"></div>
 
 <script>
+
 async function chamarIA() {
 
     const pergunta = document.getElementById("pergunta").value.trim();
-    const respostaDiv = document.getElementById("resposta");
+    const resposta = document.getElementById("resposta");
 
     if (!pergunta) {
         alert("Digite um tema para estudar.");
         return;
     }
 
-    respostaDiv.style.display = "block";
-    respostaDiv.innerText =
-        "🔎 Analisando as competências, habilidades e matriz do ENEM...";
+    resposta.style.display = "block";
+    resposta.innerText = "🔎 Consultando a IA...";
 
     try {
 
-        const response = await fetch("/perguntar", {
+        const req = await fetch("/perguntar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -137,27 +136,20 @@ async function chamarIA() {
             })
         });
 
-        const dados = await response.json();
+        const dados = await req.json();
 
-        if (!response.ok) {
-            respostaDiv.innerText =
-                "Erro no servidor:\n\n" +
-                JSON.stringify(dados, null, 2);
-            return;
-        }
-
-        respostaDiv.innerText =
+        resposta.innerText =
             dados.resposta || "Nenhuma resposta retornada.";
 
     } catch (erro) {
 
         console.error(erro);
 
-        respostaDiv.innerText =
-            "❌ Falha ao conectar à IA.\n\n" +
-            erro.message;
+        resposta.innerText =
+            "Erro de conexão com o servidor.";
     }
 }
+
 </script>
 
 </body>
