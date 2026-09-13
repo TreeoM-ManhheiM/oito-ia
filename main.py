@@ -14,6 +14,7 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
+
 class Mensagem(BaseModel):
     texto: str
 
@@ -34,18 +35,41 @@ def teste():
 @app.post("/perguntar")
 def perguntar_ia(dados: Mensagem):
     try:
+
+        instrucao_enem = """
+Você é um professor especialista em ENEM, vestibulares e concursos.
+
+Ao responder:
+
+1. Explique o conceito principal.
+2. Mostre como o tema costuma aparecer no ENEM.
+3. Destaque palavras-chave importantes.
+4. Crie um exemplo semelhante ao estilo do ENEM.
+5. Dê uma dica de prova.
+6. Use linguagem clara para alunos do Ensino Médio.
+
+Estruture sempre a resposta assim:
+
+📘 RESUMO
+🔍 COMO CAI NO ENEM
+✅ EXEMPLO
+🎯 DICA DE PROVA
+"""
+
         response = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             messages=[
                 {
                     "role": "system",
-                    "content": "Você é um professor especialista em Python."
+                    "content": instrucao_enem
                 },
                 {
                     "role": "user",
                     "content": dados.texto
                 }
-            ]
+            ],
+            temperature=0.7,
+            max_tokens=1000
         )
 
         return {
@@ -53,24 +77,8 @@ def perguntar_ia(dados: Mensagem):
         }
 
     except Exception as e:
-        return {
-            "erro": str(e),
-            "tipo": type(e).__name__
-        }
-        
-        return {
-            "resposta": response.choices[0].message.content
-        }
 
-    except Exception as e:
         erro_completo = traceback.format_exc()
 
         print("======== ERRO ========")
-        print(erro_completo)
-        print("======================")
-
-        return {
-            "erro": str(e),
-            "tipo": type(e).__name__,
-            "detalhes": erro_completo
-        }
+        print(erro_completo
