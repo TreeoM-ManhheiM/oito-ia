@@ -27,7 +27,7 @@ def perguntar_ia(dados: Mensagem):
     )
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="llama3-8b-8192",
         messages=[
             {"role": "system", "content": instrucao_enem},
             {"role": "user", "content": dados.texto}
