@@ -15,22 +15,29 @@ client = OpenAI(
 class Mensagem(BaseModel):
     texto: str
 
-@app.get("/")
-def pagina_inicial():
-    return FileResponse("index.html")
-
 @app.post("/perguntar")
 def perguntar_ia(dados: Mensagem):
-    # O "Cochicho" turbinado com o filtro automático de formatos de questões!
-    instrucao_enem = (
-        "Você é um professor especialista na Programação em Python"
-    )
+    try:
+        response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[
+                {"role": "system", "content": instrucao_enem},
+                {"role": "user", "content": dados.texto}
+            ]
+        )
 
-    response = client.chat.completions.create(
-        model="llama3-8b-8192",
-        messages=[
-            {"role": "system", "content": instrucao_enem},
-            {"role": "user", "content": dados.texto}
-        ]
-    )
+        return {
+            "resposta": response.choices[0].message.content
+        }
+
+    except Exception as e:
+        import traceback
+
+        erro = traceback.format_exc()
+        print(erro)
+
+        return {
+            "erro": str(e),
+            "detalhes": erro
+        }
     return {"resposta": response.choices[0].message.content}
