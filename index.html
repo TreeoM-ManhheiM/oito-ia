@@ -1,67 +1,164 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> EE Oito de Abril</title>
-  <style>
-    body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
-    h1 { color: #3b82f6; margin-bottom: 5px; }
-    p { color: #94a3b8; font-size: 16px; margin-top: 0; }
-    .creditos { font-size: 14px; color: #cbd5e1; margin-top: 15px; background: #1e293b; display: inline-block; padding: 10px 20px; border-radius: 20px; border: 1px solid #3b82f6; }
-    
-    input { padding: 15px; width: 80%; max-width: 500px; border-radius: 8px; border: 2px solid #3b82f6; background: #1e293b; color: white; font-size: 16px; margin-bottom: 15px; outline: none; margin-top: 20px;}
-    input:focus { border-color: #10b981; }
-    
-    button { padding: 15px 30px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
-    button:hover { background: #059669; transform: scale(1.05); }
-    
-    /* O pre-wrap garante que as quebras de linha do Python apareçam no HTML */
-    #resposta { margin-top: 30px; color: #f8fafc; font-size: 17px; line-height: 1.8; max-width: 700px; margin-left: auto; margin-right: auto; text-align: left; background: #1e293b; padding: 25px; border-radius: 8px; border-left: 5px solid #3b82f6; white-space: pre-wrap; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EE Oito de Abril - Reta Final ENEM 2026</title>
+
+<style>
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Arial,sans-serif;
+    text-align:center;
+    padding:40px;
+}
+
+h1{
+    color:#3b82f6;
+    margin-bottom:10px;
+}
+
+p{
+    color:#94a3b8;
+}
+
+.creditos{
+    display:inline-block;
+    margin:15px 0 25px 0;
+    padding:12px 20px;
+    border-radius:10px;
+    background:#1e293b;
+    border:1px solid #3b82f6;
+}
+
+textarea{
+    width:85%;
+    max-width:750px;
+    height:120px;
+    background:#1e293b;
+    color:white;
+    border:2px solid #3b82f6;
+    border-radius:8px;
+    padding:15px;
+    font-size:16px;
+    resize:vertical;
+}
+
+textarea:focus{
+    outline:none;
+    border-color:#10b981;
+}
+
+button{
+    margin-top:15px;
+    padding:15px 30px;
+    border:none;
+    border-radius:8px;
+    background:#10b981;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#059669;
+}
+
+#resposta{
+    margin-top:30px;
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:left;
+    background:#1e293b;
+    padding:25px;
+    border-left:5px solid #3b82f6;
+    border-radius:10px;
+    white-space:pre-wrap;
+    line-height:1.8;
+    display:none;
+}
+</style>
 </head>
+
 <body>
 
-  <h1>EE 8 de Abril- Reta Final ENEM 2026</h1>
-  <p>Alinhado às diretrizes da SEDUC e BNCC para turbinar seu engajamento.</p>
-  
-  <div class="creditos">
-     Desenvolvido para os alunos da <strong>3° Anos 2026 EE Oito de Abril</strong>
-  </div>
-  <br>
-  
-  <input type="text" id="pergunta" placeholder="Digite um tema (ex: Era Vargas, Citologia, Logaritmo)...">
-  <br>
-  <button onclick="chamarIA()">Descobrir como cai na prova </button>
-  
-  <div id="resposta" style="display: none;"></div>
+<h1>🎓 EE Oito de Abril - Reta Final ENEM 2026</h1>
 
-  <script>
-    async function chamarIA() {
-      const campoTexto = document.getElementById('pergunta').value;
-      const blocoResposta = document.getElementById('resposta');
-      
-      if (!campoTexto) return alert("Ei! Digite um assunto para começarmos a estudar! ");
-      
-      blocoResposta.style.display = "block";
-      blocoResposta.innerText = " Processando as matrizes do ENEM e buscando macetes...";
+<p>
+Aprenda qualquer tema da prova usando explicações no estilo ENEM.
+</p>
 
-      try {
+<div class="creditos">
+    Desenvolvido para os alunos dos <strong>3º Anos 2026 - EE Oito de Abril</strong>
+</div>
+
+<br>
+
+<textarea
+    id="pergunta"
+    placeholder="Exemplo: Era Vargas, Citologia, Função Exponencial, Revolução Francesa..."
+></textarea>
+
+<br>
+
+<button onclick="chamarIA()">
+🚀 Descobrir como cai na prova
+</button>
+
+<div id="resposta"></div>
+
+<script>
+async function chamarIA() {
+
+    const pergunta = document.getElementById("pergunta").value.trim();
+    const respostaDiv = document.getElementById("resposta");
+
+    if (!pergunta) {
+        alert("Digite um tema para estudar.");
+        return;
+    }
+
+    respostaDiv.style.display = "block";
+    respostaDiv.innerText =
+        "🔎 Analisando as competências, habilidades e matriz do ENEM...";
+
+    try {
+
         const response = await fetch("/perguntar", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ texto: campoTexto })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                texto: pergunta
+            })
         });
 
-        if (!response.ok) throw new Error("Erro no servidor");
-
         const dados = await response.json();
-        blocoResposta.innerText = dados.resposta;
-      } catch (erro) {
-        blocoResposta.innerText = " Ops! Tivemos um pequeno erro de conexão com a IA. Tente novamente em alguns segundos.";
+
+        if (!response.ok) {
+            respostaDiv.innerText =
+                "Erro no servidor:\n\n" +
+                JSON.stringify(dados, null, 2);
+            return;
+        }
+
+        respostaDiv.innerText =
+            dados.resposta || "Nenhuma resposta retornada.";
+
+    } catch (erro) {
+
         console.error(erro);
-      }
+
+        respostaDiv.innerText =
+            "❌ Falha ao conectar à IA.\n\n" +
+            erro.message;
     }
-  </script>
+}
+</script>
+
 </body>
 </html>
