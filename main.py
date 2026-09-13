@@ -1,5 +1,6 @@
 import os
 import traceback
+
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
@@ -12,12 +13,15 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
+
 class Mensagem(BaseModel):
     texto: str
+
 
 @app.get("/")
 def pagina_inicial():
     return FileResponse("index.html")
+
 
 @app.get("/teste")
 def teste():
@@ -26,6 +30,7 @@ def teste():
         "groq_key_configurada": os.environ.get("GROQ_API_KEY") is not None
     }
 
+
 @app.post("/perguntar")
 def perguntar_ia(dados: Mensagem):
     try:
@@ -33,29 +38,51 @@ def perguntar_ia(dados: Mensagem):
         instrucao_enem = """
 Você é um professor especialista em ENEM.
 
-Formate sempre a resposta com:
+Sempre responda exatamente nesta estrutura:
 
 📘 RESUMO
+Explique o conteúdo de forma simples.
+
 🔍 COMO CAI NO ENEM
+Mostre como o tema costuma aparecer na prova.
+
 ✅ EXEMPLO
+Crie um exemplo semelhante ao estilo ENEM.
+
 🎯 DICA DE PROVA
+Dê um macete ou dica para acertar questões.
+
+Use linguagem clara para alunos do Ensino Médio.
 """
 
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[
-                {"role": "system", "content": instrucao_enem},
-                {"role": "user", "content": dados.texto}
-            ]
+                {
+                    "role": "system",
+                    "content": instrucao_enem
+                },
+                {
+                    "role": "user",
+                    "content": dados.texto
+                }
+            ],
+            temperature=0.7,
+            max_tokens=1200
         )
 
+        resposta = response.choices[0].message.content
+
         return {
-            "resposta": response.choices[0].message.content
+            "resposta": resposta
         }
 
     except Exception as e:
+
+        erro_completo = traceback.format_exc()
+
+        print(erro_completo)
+
         return {
-            "erro": str(e),
-            "tipo": type(e).__name__,
-            "detalhes": traceback.format_exc()
+            "resposta": f"Erro: {str(e)}"
         }
