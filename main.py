@@ -8,6 +8,7 @@ from openai import OpenAI
 
 app = FastAPI()
 
+# Cliente Groq
 client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
@@ -21,6 +22,14 @@ class Mensagem(BaseModel):
 @app.get("/")
 def pagina_inicial():
     return FileResponse("index.html")
+
+
+@app.get("/teste")
+def teste():
+    return {
+        "status": "online",
+        "groq_key_configurada": os.environ.get("GROQ_API_KEY") is not None
+    }
 
 
 @app.get("/modelos")
@@ -43,23 +52,23 @@ def perguntar_ia(dados: Mensagem):
     try:
 
         instrucao_enem = """
-Você é um professor especialista em ENEM.
+Você é um professor especialista em ENEM, vestibulares e concursos.
 
 Sempre responda exatamente nesta estrutura:
 
 📘 RESUMO
-Explique o conteúdo de forma simples.
+Explique o conteúdo de forma simples e objetiva.
 
 🔍 COMO CAI NO ENEM
-Mostre como o tema costuma aparecer na prova.
+Explique como o tema costuma aparecer nas provas.
 
 ✅ EXEMPLO
 Crie um exemplo semelhante ao estilo ENEM.
 
 🎯 DICA DE PROVA
-Dê um macete ou dica para acertar questões.
+Dê uma dica prática para o aluno acertar questões.
 
-Use linguagem clara para alunos do Ensino Médio.
+Utilize linguagem clara para estudantes do Ensino Médio.
 """
 
         response = client.chat.completions.create(
@@ -78,18 +87,20 @@ Use linguagem clara para alunos do Ensino Médio.
             max_tokens=1200
         )
 
-        resposta = response.choices[0].message.content
-
         return {
-            "resposta": resposta
+            "resposta": response.choices[0].message.content
         }
 
     except Exception as e:
 
         erro_completo = traceback.format_exc()
 
+        print("========== ERRO ==========")
         print(erro_completo)
+        print("==========================")
 
         return {
-            "resposta": f"Erro: {str(e)}"
+            "erro": str(e),
+            "tipo": type(e).__name__,
+            "detalhes": erro_completo
         }
