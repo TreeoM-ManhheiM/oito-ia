@@ -23,12 +23,19 @@ def pagina_inicial():
     return FileResponse("index.html")
 
 
-@app.get("/teste")
-def teste():
-    return {
-        "status": "online",
-        "groq_key_configurada": os.environ.get("GROQ_API_KEY") is not None
-    }
+@app.get("/modelos")
+def listar_modelos():
+    try:
+        modelos = client.models.list()
+
+        return {
+            "modelos": [m.id for m in modelos.data]
+        }
+
+    except Exception as e:
+        return {
+            "erro": str(e)
+        }
 
 
 @app.post("/perguntar")
